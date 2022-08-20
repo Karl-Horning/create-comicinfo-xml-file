@@ -2,6 +2,7 @@ require("dotenv").config();
 // Modules
 const axios = require("axios");
 const cryptoJs = require("crypto-js");
+const { getDateMetadata, getCreators } = require("./helper-functions");
 // URL
 const marvelApiUrl = "https://gateway.marvel.com:443/v1/public/";
 
@@ -35,6 +36,8 @@ async function getComicInfo(comicId) {
 async function createComicObject(comicId) {
     const comicInfo = await getComicInfo(comicId);
     const comicInfoUrl = comicInfo.urls[0].url.split("?");
+    const comicDate = getDateMetadata(comicInfo.dates);
+    const creators = getCreators(comicInfo.creators);
 
     const comicObj = {
         title: comicInfo.title,
@@ -42,23 +45,23 @@ async function createComicObject(comicId) {
         number: comicInfo.issueNumber,
         web: comicInfoUrl[0],
         series: comicInfo.series.name,
-        volume: "",
+        volume: comicDate.year,
         ageRating: "",
         publisher: "Marvel",
         genre: "Comics",
         languageISO: "en",
         count: comicInfo.pageCount,
         seriesGroup: comicInfo.series.name,
-        year: "",
-        month: "",
-        day: "",
-        writer: "",
-        penciler: "",
-        inker: "",
-        colorist: "",
-        letterer: "",
+        year: comicDate.year,
+        month: comicDate.month,
+        day: comicDate.day,
+        writer: creators.writer,
+        penciler: creators.penciler,
+        inker: creators.inker,
+        colorist: creators.colorist,
+        letterer: creators.letterer,
         coverArtist: "",
-        editor: "",
+        editor: creators.editor,
     };
 
     return comicObj;
