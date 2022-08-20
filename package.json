@@ -26,6 +26,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "prompt-sync": "^4.2.0"
   }
 }
