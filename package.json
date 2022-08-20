@@ -1,0 +1,31 @@
+{
+  "name": "create-comicinfo-xml-file",
+  "version": "1.0.0",
+  "description": "Creates a ComicInfo.xml with data from the Marvel API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Karl-Horning/create-comicinfo-xml-file.git"
+  },
+  "keywords": [
+    "marvel",
+    "api",
+    "comics",
+    "comicinfo",
+    "comicinfo.xml"
+  ],
+  "author": "Karl Horning",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Karl-Horning/create-comicinfo-xml-file/issues"
+  },
+  "homepage": "https://github.com/Karl-Horning/create-comicinfo-xml-file#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.1"
+  }
+}
