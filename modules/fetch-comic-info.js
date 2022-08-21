@@ -30,7 +30,7 @@ async function getComicInfo(comicId) {
             console.warn(`No results for ${comicId}`);
         }
     } catch (error) {
-        console.error(error);
+        console.error(`${error.response.data.code}: ${error.response.data.status} (${comicId})`);
     }
 }
 
@@ -77,8 +77,6 @@ async function createComicObject(comicId) {
 
         return comicObj;
     }
-
-    console.log(`Could not get comic info for ${comicId}. Please try again later`);
 }
 
 module.exports = createComicObject;
