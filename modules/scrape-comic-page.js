@@ -16,29 +16,37 @@ async function scrapePage(url) {
 }
 
 function getComicSummary(html) {
-    // Load the HTML in Cheerio
-    const $ = cheerio.load(html);
+    try {
+        // Load the HTML in Cheerio
+        const $ = cheerio.load(html);
 
-    // User Cheerio to sift through the HTML for the summary and return it
-    const summarySection = $(".featured-item-desc");
-    // The summary section is repeated, so return only the first section
-    const doubleSummaryText = summarySection.text().toString().trim();
-    const summaryTextArr = doubleSummaryText.split("\n");
-    const summaryText = summaryTextArr[0].trim();
+        // User Cheerio to sift through the HTML for the summary and return it
+        const summarySection = $(".featured-item-desc");
+        // The summary section is repeated, so return only the first section
+        const doubleSummaryText = summarySection.text().toString().trim();
+        const summaryTextArr = doubleSummaryText.split("\n");
+        const summaryText = summaryTextArr[0].trim();
 
-    return summaryText;
+        return summaryText;
+    } catch (error) {
+        console.log("No summary section");
+    }
 }
 
 function getCoverArtist(html) {
-    // Load the HTML in Cheerio
-    const $ = cheerio.load(html);
+    try {
+        // Load the HTML in Cheerio
+        const $ = cheerio.load(html);
 
-    // Use the classes and children tags to get cover artist
-    const creatorList = $(".creatorList > li:last > div:last > a").html();
-    // Replace the whitespace with a single space
-    const coverArtist = creatorList.replaceAll(/\s+/g, " ");
+        // Use the classes and children tags to get cover artist
+        const creatorList = $(".creatorList > li:last > div:last > a").html();
+        // Replace the whitespace with a single space
+        const coverArtist = creatorList.replaceAll(/\s+/g, " ");
 
-    return coverArtist;
+        return coverArtist;
+    } catch (error) {
+        console.log("No cover artist");
+    }
 }
 
 async function addScrapedComicInfo(comicObj) {
@@ -54,8 +62,11 @@ async function addScrapedComicInfo(comicObj) {
     const html = await scrapePage(url);
 
     if (html) {
-        scrapedComicInfo.coverArtist = getCoverArtist(html);
-        scrapedComicInfo.summary = getComicSummary(html);
+        const coverArtist = getCoverArtist(html) || "";
+        const summary = getComicSummary(html) || "";
+
+        scrapedComicInfo.coverArtist = coverArtist;
+        scrapedComicInfo.summary = summary;
     }
 
     return scrapedComicInfo;
