@@ -1,7 +1,6 @@
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
 
-// 95737
 async function scrapePage(comicObj) {
     // Use the URL to scrape the comic page
     const url = comicObj.web;
@@ -25,19 +24,15 @@ async function scrapePage(comicObj) {
     const doubleSummaryText = summarySection.text().toString().trim();
     const summaryTextArr = doubleSummaryText.split("\n");
 
+    // Use the classes and children tags to get cover artist
+    const creatorList = $(".creatorList > li:last > div:last a").html();
+    // Replace the whitespace with a single space
+    const coverArtist = creatorList.replaceAll(/\s+/g, " ");
+    // Assign the scraped info to the return object
+    scrapedComicInfo.coverArtist = coverArtist;
     scrapedComicInfo.summary = summaryTextArr[0].trim();
 
     return scrapedComicInfo;
 }
-
-
-// Get the Cover Artist:
-// Get the length of the creator list
-// const creatorListLen = document.getElementsByClassName('creatorList')[0].children.length - 1
-// Get the only element (ul) with the name 'creatorList' (0)
-// Using 'children', go to the last li
-// Replace the unneeded text and whitespace to leave only the name
-// const coverArtist = document.getElementsByClassName('creatorList')[0].children[creatorListLen].innerText.replace("Cover Artist:\n", "").trim()
-// const coverArtist = document.getElementsByClassName('creatorList')[0].children[2].innerText.replace("Cover Artist:\n", "").trim()
 
 module.exports = scrapePage;
