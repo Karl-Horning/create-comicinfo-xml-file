@@ -77,4 +77,13 @@ function getCreators(creatorArr) {
     return creators;
 }
 
-module.exports = { getDateMetadata, getCreators };
+function encodeForXml(xmlText) {
+    for (const key in xmlText) {
+        if (xmlText[key]) {
+            const newVal = xmlText[key].toString().replace(/&/g, "&amp;");
+            xmlText[key] = newVal;
+        }
+    }
+}
+
+module.exports = { getDateMetadata, getCreators, encodeForXml };

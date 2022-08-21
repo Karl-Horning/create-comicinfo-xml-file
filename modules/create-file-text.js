@@ -1,13 +1,16 @@
 const createComicObject = require("./fetch-comic-info");
+const { encodeForXml } = require("./helper-functions");
 
 async function createFileText(comicId) {
     const comicInfo = await createComicObject(comicId);
 
-    if (comicInfo) { 
+    encodeForXml(comicInfo);
+
+    if (comicInfo) {
         const xmlInfo = `<?xml version="1.0"?>
     <ComicInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Title>${comicInfo.title}</Title>
-        <Summary>${comicInfo.summary}</Summary>
+        <Summary>${comicInfo.summary.replace(/&/g, "&amp;")}</Summary>
         <Number>${comicInfo.number}</Number>
         <Web>${comicInfo.web}</Web>
         <!-- Series metadata -->
@@ -37,10 +40,9 @@ async function createFileText(comicId) {
         <CoverArtist>${comicInfo.coverArtist}</CoverArtist>
         <Editor>${comicInfo.editor}</Editor>
     </ComicInfo>`;
-    
+
         return xmlInfo;
     }
-
 }
 
 module.exports = createFileText;
