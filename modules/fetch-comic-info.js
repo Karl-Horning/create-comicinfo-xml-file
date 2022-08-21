@@ -3,7 +3,9 @@ require("dotenv").config();
 const axios = require("axios");
 const cryptoJs = require("crypto-js");
 const { getDateMetadata, getCreators } = require("./helper-functions");
-// URL
+const scrapePage = require("./scrape-comic-page");
+
+// Base URL
 const marvelApiUrl = "https://gateway.marvel.com:443/v1/public/";
 
 // ENV
@@ -40,6 +42,7 @@ async function createComicObject(comicId) {
     const creators = getCreators(comicInfo.creators);
 
     const comicObj = {
+        id: comicInfo.id,
         title: comicInfo.title,
         summary: comicInfo.description || "",
         number: comicInfo.issueNumber,
@@ -63,6 +66,12 @@ async function createComicObject(comicId) {
         coverArtist: "",
         editor: creators.editor,
     };
+
+    if (!comicObj.summary || comicObj.coverArtist) {
+        const scrapedComicInfo = await scrapePage(comicObj)
+        comicObj.summary = scrapedComicInfo.summary;
+        comicObj.coverArtist = scrapedComicInfo.coverArtist;
+    }
 
     return comicObj;
 }
