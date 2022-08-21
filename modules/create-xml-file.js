@@ -4,12 +4,15 @@ const fileName = "./output/ComicInfo.xml";
 
 async function createXmlFile(comicId) {
     const fileText = await createFileText(comicId);
-    const successMessage = `The XML file for ${comicId} has been created successfully!`;
 
-    fs.writeFile(fileName, fileText, (err) => {
-        if (err) throw err;
-        console.log(successMessage);
-    });
+    if (fileText) {
+        const successMessage = `The XML file for ${comicId} has been created successfully!`;
+    
+        fs.writeFile(fileName, fileText, (err) => {
+            if (err) throw err;
+            console.log(successMessage);
+        });    
+    }
 }
 
 module.exports = createXmlFile;
