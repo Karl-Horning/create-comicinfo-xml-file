@@ -61,6 +61,9 @@ function getCreators(creatorArr) {
             case creator.role === "penciler":
             case creators.penciler === "" &&
                 creator.role === "penciler (cover)":
+            case creator.role === "penciller":
+            case creators.penciler === "" &&
+                creator.role === "penciller (cover)":
                 creators.penciler = creator.name;
                 break;
             case creator.role === "writer":
