@@ -26,7 +26,7 @@ async function createFileText(comicId) {
         <!-- Read lists -->
         <AlternateSeries></AlternateSeries>
         <StoryArc></StoryArc>
-        <AlternateNumber></AlternateNumber>
+        <AlternateNumber>${comicInfo.id}</AlternateNumber>
         <!-- Release Date -->
         <Year>${comicInfo.year}</Year>
         <Month>${comicInfo.month}</Month>
