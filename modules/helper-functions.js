@@ -1,7 +1,18 @@
-// Searches the date array for the published date
-function getPublishedDate(dateArr) {
+/**
+ * Searches the date array for the published date.
+ * @param {Array<object>} dateArr - An array of date objects.
+ * @returns {string} The published date.
+ */
+const getPublishedDate = (dateArr) => {
     let pubDate = "";
 
+    // Check if dateArr is an array
+    if (!Array.isArray(dateArr)) {
+        console.error("Invalid input: dateArr must be an array.");
+        return pubDate;
+    }
+
+    // Iterate through the date array to find the published date
     dateArr.forEach((d) => {
         if (d.type === "focDate") {
             pubDate = d.date;
@@ -9,10 +20,14 @@ function getPublishedDate(dateArr) {
     });
 
     return pubDate;
-}
+};
 
-// Spits the date timestamp so that it can be used in the XML file
-function getDateMetadata(dateArr) {
+/**
+ * Splits the date timestamp so that it can be used in the XML file.
+ * @param {Array<object>} dateArr - An array of date objects.
+ * @returns {object} An object containing year, month, and day.
+ */
+const getDateMetadata = (dateArr) => {
     const publishedDateTs = getPublishedDate(dateArr);
     const pubDateArr = publishedDateTs.toString().split("-");
     const pubDateDay = pubDateArr[2].split("T");
@@ -24,10 +39,14 @@ function getDateMetadata(dateArr) {
     };
 
     return retDate;
-}
+};
 
-// Gets the creators from the objects inside the creator array
-function getCreators(creatorArr) {
+/**
+ * Gets the creators from the objects inside the creator array.
+ * @param {Array<object>} creatorArr - An array of creator objects.
+ * @returns {object} An object containing information about creators.
+ */
+const getCreators = (creatorArr) => {
     let creators = {
         colorist: "",
         coverArtist: "",
@@ -38,6 +57,13 @@ function getCreators(creatorArr) {
         writer: "",
     };
 
+    // Check if creatorArr is an array
+    if (!Array.isArray(creatorArr)) {
+        console.error("Invalid input: creatorArr must be an array.");
+        return creators;
+    }
+
+    // Iterate through the creator array to extract information about creators
     creatorArr.items.forEach((creator) => {
         switch (true) {
             case creator.role === "colorist":
@@ -75,15 +101,19 @@ function getCreators(creatorArr) {
     });
 
     return creators;
-}
+};
 
-function encodeForXml(xmlText) {
+/**
+ * Encodes XML text to ensure it is properly formatted for XML documents.
+ * @param {object} xmlText - The XML text to encode.
+ */
+const encodeForXml = (xmlText) => {
     for (const key in xmlText) {
         if (xmlText[key]) {
             const newVal = xmlText[key].toString().replace(/&/g, "&amp;");
             xmlText[key] = newVal;
         }
     }
-}
+};
 
 module.exports = { getDateMetadata, getCreators, encodeForXml };
