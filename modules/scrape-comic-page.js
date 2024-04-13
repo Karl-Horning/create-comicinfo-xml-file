@@ -1,9 +1,13 @@
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
 
-async function scrapePage(url) {
+/**
+ * Scrapes the HTML content of a web page.
+ * @param {string} url - The URL of the web page to scrape.
+ * @returns {Promise<string>} A promise that resolves with the HTML content of the web page.
+ */
+const scrapePage = async (url) => {
     try {
-        // Use Puppeteer to get the HTML
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.goto(url);
@@ -11,65 +15,72 @@ async function scrapePage(url) {
         await browser.close();
         return html;
     } catch (error) {
-        console.warn(error);
+        console.error("Error while scraping page:", error);
+        throw error;
     }
-}
+};
 
-function getComicSummary(html) {
+/**
+ * Extracts information from HTML using a specified CSS selector.
+ * @param {string} html - The HTML content to extract information from.
+ * @param {string} selector - The CSS selector to use for extracting information.
+ * @returns {string} The extracted information.
+ */
+const extractInfoFromHtml = (html, selector) => {
     try {
-        // Load the HTML in Cheerio
         const $ = cheerio.load(html);
-
-        // User Cheerio to sift through the HTML for the summary and return it
-        const summarySection = $(".featured-item-desc");
-        // The summary section is repeated, so return only the first section
-        const doubleSummaryText = summarySection.text().toString().trim();
-        const summaryTextArr = doubleSummaryText.split("\n");
-        const summaryText = summaryTextArr[0].trim();
-
-        return summaryText;
+        return $(selector).text().trim();
     } catch (error) {
-        console.log("No summary section");
+        console.error(
+            `Error while extracting info from HTML using selector '${selector}':`,
+            error
+        );
+        return "";
     }
-}
+};
 
-function getCoverArtist(html) {
-    try {
-        // Load the HTML in Cheerio
-        const $ = cheerio.load(html);
+/**
+ * Extracts the cover artist information from HTML.
+ * @param {string} html - The HTML content to extract cover artist information from.
+ * @returns {string} The cover artist information.
+ */
+const getCoverArtist = (html) => {
+    return (
+        extractInfoFromHtml(html, ".creatorList > li:last > div:last > a") || ""
+    );
+};
 
-        // Use the classes and children tags to get cover artist
-        const creatorList = $(".creatorList > li:last > div:last > a").html();
-        // Replace the whitespace with a single space
-        const coverArtist = creatorList.replaceAll(/\s+/g, " ");
+/**
+ * Extracts the comic summary from HTML.
+ * @param {string} html - The HTML content to extract the comic summary from.
+ * @returns {string} The comic summary.
+ */
+const getComicSummary = (html) => {
+    return extractInfoFromHtml(html, ".featured-item-desc") || "";
+};
 
-        return coverArtist;
-    } catch (error) {
-        console.log("No cover artist");
-    }
-}
-
-async function addScrapedComicInfo(comicObj) {
-    // Use the URL to scrape the comic page
+/**
+ * Adds scraped comic information to a comic object.
+ * @param {object} comicObj - The comic object to which scraped information will be added.
+ * @param {string} comicObj.web - The URL of the comic page to scrape.
+ * @returns {Promise<object>} A promise that resolves with the updated comic object containing scraped information.
+ */
+const addScrapedComicInfo = async (comicObj) => {
     const url = comicObj.web;
-    // Return object
     const scrapedComicInfo = {
         summary: "",
         coverArtist: "",
     };
 
-    // Scrape the webpage
-    const html = await scrapePage(url);
-
-    if (html) {
-        const coverArtist = getCoverArtist(html) || "";
-        const summary = getComicSummary(html) || "";
-
-        scrapedComicInfo.coverArtist = coverArtist;
-        scrapedComicInfo.summary = summary;
+    try {
+        const html = await scrapePage(url);
+        scrapedComicInfo.summary = getComicSummary(html);
+        scrapedComicInfo.coverArtist = getCoverArtist(html);
+    } catch (error) {
+        console.error("Error while adding scraped comic info:", error);
     }
 
     return scrapedComicInfo;
-}
+};
 
 module.exports = addScrapedComicInfo;
