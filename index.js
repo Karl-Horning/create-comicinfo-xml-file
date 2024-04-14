@@ -1,6 +1,7 @@
 const { getComicApiInfo } = require("./src/modules/fetchMarvelApiData.module");
 const { getScrapedComicInfo } = require("./src/modules/scrapeComicData.module");
 const { createComicObject } = require("./src/modules/createComicObject.module");
+const { createXmlFile } = require("./src/modules/createComicXmlFile.module");
 
 const init = async () => {
     // Get the comic from the API by its ID
@@ -26,6 +27,9 @@ const init = async () => {
 
         // Log the created comic object for testing
         console.log("comicObject:", comicObject);
+
+        // Create the XML file
+        createXmlFile(comicObject);
     }
 };
 
