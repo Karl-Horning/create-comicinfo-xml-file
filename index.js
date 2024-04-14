@@ -3,9 +3,9 @@ const { getScrapedComicInfo } = require("./src/modules/scrapeComicData.module");
 const { createComicObject } = require("./src/modules/createComicObject.module");
 const { createXmlFile } = require("./src/modules/createComicXmlFile.module");
 
-const init = async () => {
+const init = async (comicId) => {
     // Get the comic from the API by its ID
-    const comicApiInfo = await getComicApiInfo("98721");
+    const comicApiInfo = await getComicApiInfo(comicId);
 
     if (comicApiInfo) {
         // Log the comic info for testing
@@ -33,4 +33,4 @@ const init = async () => {
     }
 };
 
-init();
+init("98721");
