@@ -58,8 +58,8 @@ const getCreators = (creatorArr) => {
     };
 
     // Check if creatorArr is an array
-    if (!Array.isArray(creatorArr)) {
-        console.error("Invalid input: creatorArr must be an array.");
+    if (!Array.isArray(creatorArr.items)) {
+        console.error("Invalid input: creatorArr.items must be an array.");
         return creators;
     }
 
