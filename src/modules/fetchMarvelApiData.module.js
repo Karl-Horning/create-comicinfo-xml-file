@@ -30,7 +30,7 @@ if (
  * @param {number} comicId - The ID of the comic to retrieve information for.
  * @returns {Promise<object>} A promise that resolves with the comic information.
  */
-const getComicInfo = async (comicId) => {
+const getComicApiInfo = async (comicId) => {
     if (!isValidComicId(comicId)) {
         console.error("Incorrect comic ID. Please make sure comic ID is set.");
         process.exit(1);
@@ -57,4 +57,4 @@ const getComicInfo = async (comicId) => {
     }
 };
 
-module.exports = { getComicInfo };
+module.exports = { getComicApiInfo };
