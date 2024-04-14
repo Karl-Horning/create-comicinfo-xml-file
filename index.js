@@ -1,7 +1,26 @@
+const readline = require("readline");
 const { getComicApiInfo } = require("./src/modules/fetchMarvelApiData.module");
 const { getScrapedComicInfo } = require("./src/modules/scrapeComicData.module");
 const { createComicObject } = require("./src/modules/createComicObject.module");
 const { createXmlFile } = require("./src/modules/createComicXmlFile.module");
+
+/**
+ * Prompts the user to enter the comic ID from the terminal.
+ * @returns {Promise<string>} A promise that resolves with the entered comic ID.
+ */
+const getComicIdFromUser = () => {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
+
+    return new Promise((resolve) => {
+        rl.question("Enter the comic ID: ", (comicId) => {
+            rl.close();
+            resolve(comicId.trim());
+        });
+    });
+};
 
 /**
  * Initializes the process of fetching comic data, scraping additional info, creating a comic object, and generating an XML file.
@@ -39,4 +58,8 @@ const init = async (comicId) => {
     }
 };
 
-init("101079");
+// Entry point
+(async () => {
+    const comicId = await getComicIdFromUser();
+    init(comicId);
+})();
