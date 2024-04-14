@@ -4,7 +4,7 @@ require("dotenv").config();
 const axios = require("axios");
 const cryptoJs = require("crypto-js");
 const { getDateMetadata, getCreators } = require("./helper-functions");
-const { isValidComicId } = require("../src/helpers");
+const { isValidComicId } = require("../helpers");
 const addScrapedComicInfo = require("./scrape-comic-page");
 
 // Base URL
